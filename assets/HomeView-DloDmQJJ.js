@@ -1,0 +1,82 @@
+import{g as v,p as E,c as g,a as c,o as _,t as R,q as S,b as d,u as p}from"./index-BFwJRI67.js";import{_ as x}from"./_plugin-vue_export-helper-DlAUqK2U.js";const w=""+new URL("banner-DY_emGMk.png",import.meta.url).href,y=""+new URL("b1-3xAEgcRu.png",import.meta.url).href,U=""+new URL("b2-CeXXurhH.png",import.meta.url).href,P=""+new URL("b3-Baw3rsIG.png",import.meta.url).href,B={class:"BgAnimation"},D=v({__name:"pointWave",setup(n){class m{constructor(i,t={}){t=Object.assign({antialias:!1,depthTest:!1,mousemove:!1,autosize:!0,side:"front",vertex:`
+        precision highp float;
+
+        attribute vec4 a_position;
+        attribute vec4 a_color;
+
+        uniform float u_time;
+        uniform vec2 u_resolution;
+        uniform vec2 u_mousemove;
+        uniform mat4 u_projection;
+
+        varying vec4 v_color;
+
+        void main() {
+
+          gl_Position = u_projection * a_position;
+          gl_PointSize = (10.0 / gl_Position.w) * 100.0;
+
+          v_color = a_color;
+
+        }`,fragment:`
+        precision highp float;
+
+        uniform sampler2D u_texture;
+        uniform int u_hasTexture;
+
+        varying vec4 v_color;
+
+        void main() {
+
+          if ( u_hasTexture == 1 ) {
+
+            gl_FragColor = v_color * texture2D(u_texture, gl_PointCoord);
+
+          } else {
+
+            gl_FragColor = v_color;
+
+          }
+
+        }`,uniforms:{},buffers:{},camera:{},texture:null,onUpdate:()=>{},onResize:()=>{}},t);const e=Object.assign({time:{type:"float",value:0},hasTexture:{type:"int",value:0},resolution:{type:"vec2",value:[0,0]},mousemove:{type:"vec2",value:[0,0]},projection:{type:"mat4",value:[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]}},t.uniforms),s=Object.assign({position:{size:3,data:[]},color:{size:4,data:[]}},t.buffers),o=Object.assign({fov:60,near:1,far:1e4,aspect:1,z:100,perspective:!0},t.camera),r=document.createElement("canvas"),u=r.getContext("webgl",{antialias:t.antialias});if(!u)return!1;this.count=0,this.gl=u,this.canvas=r,this.camera=o,this.holder=i,this.onUpdate=t.onUpdate,this.onResize=t.onResize,this.data={},i.appendChild(r),this.createProgram(t.vertex,t.fragment),this.createBuffers(s),this.createUniforms(e),this.updateBuffers(),this.updateUniforms(),this.createTexture(t.texture),u.enable(u.BLEND),u.enable(u.CULL_FACE),u.blendFunc(u.SRC_ALPHA,u.ONE),u[t.depthTest?"enable":"disable"](u.DEPTH_TEST),t.autosize&&window.addEventListener("resize",l=>this.resize(l),!1),t.mousemove&&window.addEventListener("mousemove",l=>this.mousemove(l),!1),this.resize(),this.update=this.update.bind(this),this.time={start:performance.now(),old:performance.now()},this.update()}mousemove(i){const t=i.pageX/this.width*2-1,e=i.pageY/this.height*2-1;this.uniforms.mousemove=[t,e]}resize(i){const t=this.holder,e=this.canvas,s=this.gl,o=this.width=t.offsetWidth,r=this.height=t.offsetHeight,u=this.aspect=o/r,l=this.dpi=devicePixelRatio;e.width=o*l,e.height=r*l,e.style.width="100%",e.style.height="100%",s.viewport(0,0,o*l,r*l),s.clearColor(0,0,0,0),this.uniforms.resolution=[o,r],this.uniforms.projection=this.setProjection(u),this.onResize(o,r,l)}setProjection(i){const t=this.camera;if(t.perspective){t.aspect=i;const e=t.fov*(Math.PI/180),s=Math.tan(Math.PI*.5-.5*e),o=1/(t.near-t.far),r=[s/t.aspect,0,0,0,0,s,0,0,0,0,(t.near+t.far)*o,-1,0,0,t.near*t.far*o*2,0];return r[14]+=t.z,r[15]+=t.z,r}else return[2/this.width,0,0,0,0,-2/this.height,0,0,0,0,1,0,-1,1,0,1]}createShader(i,t){const e=this.gl,s=e.createShader(i);if(e.shaderSource(s,t),e.compileShader(s),e.getShaderParameter(s,e.COMPILE_STATUS))return s;console.log(e.getShaderInfoLog(s)),e.deleteShader(s)}createProgram(i,t){const e=this.gl,s=this.createShader(e.VERTEX_SHADER,i),o=this.createShader(e.FRAGMENT_SHADER,t),r=e.createProgram();e.attachShader(r,s),e.attachShader(r,o),e.linkProgram(r),e.getProgramParameter(r,e.LINK_STATUS)?(e.useProgram(r),this.program=r):(console.log(e.getProgramInfoLog(r)),e.deleteProgram(r))}createUniforms(i){const t=this.gl,e=this.data.uniforms=i;this.uniforms={},Object.keys(e).forEach(s=>{const o=e[s];o.location=t.getUniformLocation(this.program,"u_"+s)})}setUniform(i,t){const e=this.gl,s=this.data.uniforms[i];switch(s.value=t,s.type){case"int":{e.uniform1i(s.location,t);break}case"float":{e.uniform1f(s.location,t);break}case"vec2":{e.uniform2f(s.location,...t);break}case"vec3":{e.uniform3f(s.location,...t);break}case"vec4":{e.uniform4f(s.location,...t);break}case"mat2":{e.uniformMatrix2fv(s.location,!1,t);break}case"mat3":{e.uniformMatrix3fv(s.location,!1,t);break}case"mat4":{e.uniformMatrix4fv(s.location,!1,t);break}}}updateUniforms(){this.gl;const i=this.data.uniforms;Object.keys(i).forEach(t=>{const e=i[t];this.uniforms[t]=e.value})}createBuffers(i){this.gl;const t=this.data.buffers=i;this.buffers={},Object.keys(t).forEach(e=>{const s=t[e];s.buffer=this.createBuffer("a_"+e,s.size)})}createBuffer(i,t){const e=this.gl,s=this.program,o=e.getAttribLocation(s,i),r=e.createBuffer();return e.bindBuffer(e.ARRAY_BUFFER,r),e.enableVertexAttribArray(o),e.vertexAttribPointer(o,t,e.FLOAT,!1,0,0),r}setBuffer(i,t){const e=this.gl,s=this.data.buffers;i==null&&!e.bindBuffer(e.ARRAY_BUFFER,null)||(e.bindBuffer(e.ARRAY_BUFFER,s[i].buffer),e.bufferData(e.ARRAY_BUFFER,new Float32Array(t),e.STATIC_DRAW))}updateBuffers(){this.gl;const i=this.buffers;Object.keys(i).forEach(t=>i[t]=buffer.data),this.setBuffer(null)}createTexture(i){const t=this.gl,e=t.createTexture();t.bindTexture(t.TEXTURE_2D,e),t.texImage2D(t.TEXTURE_2D,0,t.RGBA,1,1,0,t.RGBA,t.UNSIGNED_BYTE,new Uint8Array([0,0,0,0])),this.texture=e,i&&(this.uniforms.hasTexture=1,this.loadTexture(i))}loadTexture(i){const t=this.gl,e=this.texture,s=new Image;s.onload=()=>{t.bindTexture(t.TEXTURE_2D,e),t.texImage2D(t.TEXTURE_2D,0,t.RGBA,t.RGBA,t.UNSIGNED_BYTE,s),t.texParameteri(t.TEXTURE_2D,t.TEXTURE_MIN_FILTER,t.LINEAR),t.texParameteri(t.TEXTURE_2D,t.TEXTURE_MAG_FILTER,t.LINEAR),t.texParameteri(t.TEXTURE_2D,t.TEXTURE_WRAP_S,t.CLAMP_TO_EDGE),t.texParameteri(t.TEXTURE_2D,t.TEXTURE_WRAP_T,t.CLAMP_TO_EDGE)},s.src=i}update(){const i=this.gl,t=performance.now(),e=(t-this.time.start)/5e3,s=t-this.time.old;this.time.old=t,this.uniforms.time=e,this.count>0&&(i.clear(i.COLORBUFFERBIT),i.drawArrays(i.POINTS,0,this.count)),this.onUpdate(s),requestAnimationFrame(this.update)}}return E(()=>{setTimeout(()=>{new m(document.querySelector(".waves"),{texture:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAb1BMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8v0wLRAAAAJHRSTlMAC/goGvDhmwcExrVjWzrm29TRqqSKenRXVklANSIUE8mRkGpv+HOfAAABCElEQVQ4y4VT13LDMAwLrUHteO+R9f/fWMfO6dLaPeKVEECRxOULWsEGpS9nULDwia2Y+ALqUNbAWeg775zv+sA4/FFRMxt8U2FZFCVWjR/YrH4/H9sarclSKdPMWKzb8VsEeHB3m0shkhVCyNzeXeAQ9Xl4opEieX2QCGnwGbj6GMyjw9t1K0fK9YZunPXeAGsfJtYjwzxaBnozGGorYz0ypK2HzQSYx1y8DgSRo2ewOiyh2QWOEk1Y9OrQV0a8TiBM1a8eMHWYnRMy7CZ4t1CmyRkhSUvP3gRXyHOCLBxNoC3IJv//ZrJ/kxxUHPUB+6jJZZHrpg6GOjnqaOmzp4NDR48OLxn/H27SRQ08S0ZJAAAAAElFTkSuQmCC",uniforms:{size:{type:"float",value:2.5},field:{type:"vec3",value:[0,0,0]},speed:{type:"float",value:5}},vertex:`
+    #define M_PI 3.1415926535897932384626433832795
+
+    precision highp float;
+
+    attribute vec4 a_position;
+    attribute vec4 a_color;
+
+    uniform float u_time;
+    uniform float u_size;
+    uniform float u_speed;
+    uniform vec3 u_field;
+    uniform mat4 u_projection;
+
+    varying vec4 v_color;
+
+    void main() {
+
+      vec3 pos = a_position.xyz;
+
+      pos.y += (
+        cos(pos.x / u_field.x * M_PI * 8.0 + u_time * u_speed) +
+        sin(pos.z / u_field.z * M_PI * 8.0 + u_time * u_speed)
+      ) * u_field.y;
+
+      gl_Position = u_projection * vec4( pos.xyz, a_position.w );
+      gl_PointSize = ( u_size / gl_Position.w ) * 100.0;
+
+      v_color = a_color;
+
+    }`,fragment:`
+    precision highp float;
+
+    uniform sampler2D u_texture;
+
+    varying vec4 v_color;
+
+    void main() {
+
+      gl_FragColor = v_color * texture2D(u_texture, gl_PointCoord);
+
+    }`,onResize(i,t,e){const s=[],o=[],r=400*(i/t),u=400,l=3,b=5;for(let f=0;f<r;f+=b)for(let h=0;h<u;h+=b)s.push(-r/2+f,-30,-u/2+h),o.push(0,1-f/r*1,.5+f/r*.5,h/u);this.uniforms.field=[r,l,u],this.buffers.position=s,this.buffers.color=o,this.uniforms.size=t/400*2.5*e}})},1e3)}),(a,i)=>(_(),g("div",B,i[0]||(i[0]=[c("div",{class:"waves"},null,-1)])))}}),z=x(D,[["__scopeId","data-v-19f0a78b"]]);var T=v({name:"Vue3Autocounter",interval:null,props:{startAmount:{type:Number,default:0},endAmount:{type:Number,default:0,required:!0},duration:{type:Number,default:3,validator(n){return n>0}},autoinit:{type:Boolean,default:!0},prefix:{type:String,default:""},suffix:{type:String,default:""},separator:{type:String,default:","},decimalSeparator:{type:String,default:"."},decimals:{type:Number,default:0,validator(n){return n>=0}}},data(){return{timestamp:0,startTimestamp:0,currentAmount:0,currentStartAmount:0,currentDuration:0,paused:!1,remaining:0,animationFrame:0}},mounted(){this.currentAmount=this.startAmount,this.currentStartAmount=this.startAmount,this.currentDuration=this.duration*1e3,this.remaining=this.duration*1e3,this.autoinit?this.start():this.paused=!0,this.$emit("mounted")},unmounted(){this.cancelAnimation()},watch:{startAmount(){this.reset()},endAmount(){this.reset()},duration(){this.reset()}},computed:{isCountingUp(){return this.endAmount>this.startAmount},displayedAmount(){return`${this.prefix}${this.formatedAmount}${this.suffix}`},formatedAmount(){const n=/(\d+)(\d{3})/;let m=this.currentAmount.toFixed(this.decimals);m+="";let a=m.split("."),i=a[0],t=a.length>1?this.decimalSeparator+a[1]:"",e=!isNaN(parseFloat(this.separator));if(this.separator&&!e)for(;n.test(i);)i=i.replace(n,"$1"+this.separator+"$2");return i+t}},methods:{start(){this.cancelAnimation(),this.currentStartAmount=this.startAmount,this.startTimestamp=null,this.currentDuration=this.duration*1e3,this.paused=!1,this.animationFrame=window.requestAnimationFrame(this.counting)},pause(){this.paused||(this.cancelAnimation(),this.paused=!0)},resume(){this.paused&&(this.startTimestamp=null,this.currentDuration=+this.remaining,this.currentStartAmount=+this.currentAmount,this.animationFrame=window.requestAnimationFrame(this.counting),this.paused=!1)},reset(){this.paused=!1,this.startTimestamp=null,this.cancelAnimation(),this.currentAmount=this.startAmount,this.autoinit?this.start():this.paused=!0},counting(n){this.timestamp=n,this.startTimestamp||(this.startTimestamp=n);let m=n-this.startTimestamp;this.remaining=this.currentDuration-m,this.isCountingUp?(this.currentAmount=this.currentStartAmount+(this.endAmount-this.currentStartAmount)*(m/this.currentDuration),this.currentAmount=this.currentAmount>this.endAmount?this.endAmount:this.currentAmount):(this.currentAmount=this.currentStartAmount-(this.currentStartAmount-this.endAmount)*(m/this.currentDuration),this.currentAmount=this.currentAmount<this.endAmount?this.endAmount:this.currentAmount),m<this.currentDuration?this.animationFrame=window.requestAnimationFrame(this.counting):this.$emit("finished")},cancelAnimation(){this.animationFrame&&window.cancelAnimationFrame(this.animationFrame)}}});function F(n,m,a,i,t,e){return _(),g("span",null,R(n.displayedAmount),1)}T.render=F;var A=(()=>{const n=T;return n.install=m=>{m.component("Vue3Autocounter",n)},n})();const C={class:"contentBox"},L={class:"banner"},I={class:"flex count"},M={class:"item"},N={class:"number"},O={class:"item"},G={class:"number"},j={class:"item"},k={class:"number"},X={class:"item"},H={class:"number"},V=v({__name:"HomeView",setup(n){return(m,a)=>(_(),g("div",C,[c("div",L,[a[4]||(a[4]=c("img",{src:w,alt:""},null,-1)),a[5]||(a[5]=c("div",{class:"slog"},"让我们共同为世界创造更多的价值",-1)),d(z,{class:"pointWave"}),c("div",I,[c("div",M,[c("div",N,[d(p(A),{ref:"counter",startAmount:0,endAmount:35636,duration:1,separator:",",decimalSeparator:".",decimals:0,autoinit:!0},null,512)]),a[0]||(a[0]=c("div",{class:"text"},"已完成订单",-1))]),c("div",O,[c("div",G,[d(p(A),{ref:"counter",startAmount:0,endAmount:19126,duration:1,separator:",",decimalSeparator:".",decimals:0,autoinit:!0},null,512)]),a[1]||(a[1]=c("div",{class:"text"},"在询订单",-1))]),c("div",j,[c("div",k,[d(p(A),{ref:"counter",startAmount:0,endAmount:26312,duration:1,separator:",",decimalSeparator:".",decimals:0,autoinit:!0},null,512)]),a[2]||(a[2]=c("div",{class:"text"},"服务端",-1))]),c("div",X,[c("div",H,[d(p(A),{ref:"counter",startAmount:0,endAmount:89126,duration:1,separator:",",decimalSeparator:".",decimals:0,autoinit:!0},null,512)]),a[3]||(a[3]=c("div",{class:"text"},"资源池",-1))])])]),a[6]||(a[6]=S('<div class="about" data-v-4ff84e5b><div class="title" data-v-4ff84e5b>世界工厂为您的定制产品生产提供强力支持与多元化服务</div><div class="flex post" data-v-4ff84e5b><div class="item" data-v-4ff84e5b><img src="'+y+'" alt="" data-v-4ff84e5b><div class="subTitle" data-v-4ff84e5b>庞大的制造网络</div><div class="sTxt" data-v-4ff84e5b> 世界工厂拥有超过 20,000 家制造伙伴遍布在中国和全球30多个国家，具备不同的制造能力和认证。在线即可下达订单。我们的制造网络严格遵守保密协议，保护客户隐私。 </div></div><div class="item" data-v-4ff84e5b><img src="'+U+'" alt="" data-v-4ff84e5b><div class="subTitle" data-v-4ff84e5b>实时在线报价</div><div class="sTxt" data-v-4ff84e5b> 无须漫长等待，只需轻点几下按键，即可获取 DFM（可制造性设计分析）反馈，了解备货时间和报价等信息。世界工厂实时报价引擎利用数据科学为您服务，助您轻松为项目选择合适的价格/备货时间选项。兼容 STEP、Mesh、Parasolid 和 ACIS 文件。 </div></div><div class="item" data-v-4ff84e5b><img src="'+P+'" alt="" data-v-4ff84e5b><div class="subTitle" data-v-4ff84e5b>进度更新和质量保证</div><div class="sTxt" data-v-4ff84e5b> 凭借严格的质量保证、细分的生产流程和定期状态更新， 可确保您定购的部件将准确无误地准时送达。 </div></div></div></div>',1))]))}}),$=x(V,[["__scopeId","data-v-4ff84e5b"]]);export{$ as default};
